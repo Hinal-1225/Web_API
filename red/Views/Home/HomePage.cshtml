@@ -1,0 +1,100 @@
+﻿<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Designation</th>
+            <th>Salary</th>
+            <th>Age</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td><input type="text" id="txtEmpID" style="display : none" placeholder="0" class="form-control"</td>
+            <td><input type="text" id="txtEmpName" class="form-control" placeholder="Name"</td>
+            <td><input type="text" id="txtEmpDesig" class="form-control" placeholder="Designation"</td>
+            <td><input type="text" id="txtEmpSalary" class="form-control" placeholder="Salary"</td>
+            <td><input type="text" id="txtEmpAge" class="form-control" placeholder="Age"</td>
+            <td><div class="btn btn-dark" id="btnInsert">Add Employee</div></td>
+        </tr>
+    </tfoot>
+</table>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        GetEverything();
+    })
+    function GetEverything() {
+        console.log("start");
+        var req = new XMLHttpRequest();
+        req.open("GET", "http://localhost:52672/api/EmployeeAPI")
+        req.send();
+        req.onload = function () {
+            var data = JSON.parse(req.response);
+            var TableBody = document.querySelector("table").children[1];
+            var rows = '';
+            for (var i = 0; i < data.length; i++) {
+                rows = rows + `<tr><td>${data[i]["ID"]}</td><td>${data[i]["Name"]}</td><td>${data[i]["Designation"]}</td><td>${data[i]["Salary"]}</td><td>${data[i]["Age"]}</td><td><button onClick=Delete(this) EmpID="${data[i]["ID"]}">Delete</button></td</tr>`
+            }
+            TableBody.innerHTML = rows;
+        }
+    }
+    document.querySelector("#btnInsert").addEventListener("click", function () {
+        var ename = document.querySelector("#txtEmpName").value;
+        var edesig = document.querySelector("#txtEmpDesig").value;
+        var esalary = document.querySelector("#txtEmpSalary").value;
+        var eage = document.querySelector("#txtEmpAge").value;
+
+        if (ename == "" || edesig == "" || esalary == "" || eage == "") {
+            alert("Field should not be Empty");
+        }
+        else {
+            var data = { Name: ename, Designation: edesig, Salary: esalary, Age: eage }
+            var req = new XMLHttpRequest();
+            req.open("POST", "http://localhost:52672/insertdata")
+            req.setRequestHeader("Content-Type", "application/json")
+            req.send(JSON.stringify(data));
+            req.onload = function () {
+                if (req.status == 200) {
+                    GetEverything();
+                    clearData();
+                }
+                else if (req.status == 500) {
+                    var data = JSON.parse(req.response);
+                    alert(data.ExceptionMessage);
+                }
+            }
+        }
+    })
+
+
+    function Delete(element) {
+        var empid = element.getAttribute("EmpID");
+        var xhr = new XMLHttpRequest();
+        xhr.open("Delete", "http://localhost:52672/api/EmployeeAPI/" + empid);
+        xhr.send();
+        xhr.onload = function (responseData) {
+            if (responseData.currentTarget.status == 200) {
+                GetEverything();
+            } else if (responseData.currentTarget.status == 401) {
+                var x = document.querySelector("#errorWindow")
+                x.style.display = "block";
+                x.children[0].innerHTML = "You are not authorized to delete items.";
+
+                setTimeout(function () {
+                    x.style.display = "none";
+                }, 2000)
+
+            }
+        }
+    }
+
+    function clearData() {
+        var ename = document.querySelector("#txtEmpName").value = '';
+        var edesig = document.querySelector("#txtEmpDesig").value = '';
+        var esalary = document.querySelector("#txtEmpSalary").value = '';
+        var eage = document.querySelector("#txtEmpAge").value = '';
+
+    }
+</script>

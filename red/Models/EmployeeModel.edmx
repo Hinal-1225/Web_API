@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DBEmployeeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="TBLEmployee">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Designation" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Salary" Type="numeric" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="Age" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TBLRole">
+          <Key>
+            <PropertyRef Name="Id_PK" />
+          </Key>
+          <Property Name="Id_PK" Type="int" Nullable="false" />
+          <Property Name="Role" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TBLUser">
+          <Key>
+            <PropertyRef Name="Id_PK" />
+          </Key>
+          <Property Name="Id_PK" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Role_FK" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__TBLUser__Role_FK__25869641">
+          <End Role="TBLRole" Type="Self.TBLRole" Multiplicity="1" />
+          <End Role="TBLUser" Type="Self.TBLUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBLRole">
+              <PropertyRef Name="Id_PK" />
+            </Principal>
+            <Dependent Role="TBLUser">
+              <PropertyRef Name="Role_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DBEmployeeModelStoreContainer">
+          <EntitySet Name="TBLEmployee" EntityType="Self.TBLEmployee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TBLRole" EntityType="Self.TBLRole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TBLUser" EntityType="Self.TBLUser" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__TBLUser__Role_FK__25869641" Association="Self.FK__TBLUser__Role_FK__25869641">
+            <End Role="TBLRole" EntitySet="TBLRole" />
+            <End Role="TBLUser" EntitySet="TBLUser" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DBEmployeeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="TBLEmployee">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Designation" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Salary" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="Age" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TBLRole">
+          <Key>
+            <PropertyRef Name="Id_PK" />
+          </Key>
+          <Property Name="Id_PK" Type="Int32" Nullable="false" />
+          <Property Name="Role" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="TBLUsers" Relationship="Self.FK__TBLUser__Role_FK__25869641" FromRole="TBLRole" ToRole="TBLUser" />
+        </EntityType>
+        <EntityType Name="TBLUser">
+          <Key>
+            <PropertyRef Name="Id_PK" />
+          </Key>
+          <Property Name="Id_PK" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Role_FK" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TBLRole" Relationship="Self.FK__TBLUser__Role_FK__25869641" FromRole="TBLUser" ToRole="TBLRole" />
+        </EntityType>
+        <Association Name="FK__TBLUser__Role_FK__25869641">
+          <End Role="TBLRole" Type="Self.TBLRole" Multiplicity="1" />
+          <End Role="TBLUser" Type="Self.TBLUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBLRole">
+              <PropertyRef Name="Id_PK" />
+            </Principal>
+            <Dependent Role="TBLUser">
+              <PropertyRef Name="Role_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DBEmployeeEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="TBLEmployees" EntityType="Self.TBLEmployee" />
+          <EntitySet Name="TBLRoles" EntityType="Self.TBLRole" />
+          <EntitySet Name="TBLUsers" EntityType="Self.TBLUser" />
+          <AssociationSet Name="FK__TBLUser__Role_FK__25869641" Association="Self.FK__TBLUser__Role_FK__25869641">
+            <End Role="TBLRole" EntitySet="TBLRoles" />
+            <End Role="TBLUser" EntitySet="TBLUsers" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DBEmployeeModelStoreContainer" CdmEntityContainer="DBEmployeeEntities">
+          <EntitySetMapping Name="TBLEmployees">
+            <EntityTypeMapping TypeName="DBEmployeeModel.TBLEmployee">
+              <MappingFragment StoreEntitySet="TBLEmployee">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Designation" ColumnName="Designation" />
+                <ScalarProperty Name="Salary" ColumnName="Salary" />
+                <ScalarProperty Name="Age" ColumnName="Age" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TBLRoles">
+            <EntityTypeMapping TypeName="DBEmployeeModel.TBLRole">
+              <MappingFragment StoreEntitySet="TBLRole">
+                <ScalarProperty Name="Id_PK" ColumnName="Id_PK" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TBLUsers">
+            <EntityTypeMapping TypeName="DBEmployeeModel.TBLUser">
+              <MappingFragment StoreEntitySet="TBLUser">
+                <ScalarProperty Name="Id_PK" ColumnName="Id_PK" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Role_FK" ColumnName="Role_FK" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
